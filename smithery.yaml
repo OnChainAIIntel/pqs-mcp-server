@@ -1,0 +1,19 @@
+name: pqs-mcp-server
+description: The world's first named AI prompt quality score as an MCP server. Score, optimize, and compare LLM prompts before inference. Built on PEEM, RAGAS, G-Eval, and MT-Bench. x402-native on Base.
+version: 1.0.3
+
+startCommand:
+  type: stdio
+  command: npx
+  args: ["pqs-mcp-server"]
+
+configSchema:
+  type: object
+  properties:
+    api_key:
+      type: string
+      description: "PQS API key for paid tools (optimize_prompt, compare_models). Get one free at pqs.onchainintel.net"
+  required: []
+
+capabilities:
+  tools: true
