@@ -1,0 +1,36 @@
+{
+  "name": "pqs-mcp-server",
+  "version": "1.0.1",
+  "description": "PQS (Prompt Quality Score) MCP server — score, optimize, and compare LLM prompts before they hit any model. x402-native, built on PEEM, RAGAS, G-Eval, and MT-Bench.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "mcp",
+    "prompt",
+    "quality",
+    "score",
+    "llm",
+    "x402",
+    "pqs",
+    "ai",
+    "claude",
+    "gpt"
+  ],
+  "author": "OnChainIntel",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "node-fetch": "^3.3.2"
+  },
+  "bin": {
+    "pqs-mcp-server": "./index.js"
+  },
+  "homepage": "https://pqs.onchainintel.net",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OnChainAIIntel/pqs-mcp-server"
+  }
+}
