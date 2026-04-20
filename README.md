@@ -1,6 +1,6 @@
 [![smithery badge](https://smithery.ai/badge/onchaintel/pqs)](https://smithery.ai/servers/onchaintel/pqs)
 [![GitHub Marketplace](https://img.shields.io/badge/GitHub_Marketplace-PQS_Check-2ea44f?logo=github)](https://github.com/marketplace/actions/pqs-check)
-
+[![pqs-mcp-server MCP server](https://glama.ai/mcp/servers/OnChainAIIntel/pqs-mcp-server/badges/card.svg)](https://glama.ai/mcp/servers/OnChainAIIntel/pqs-mcp-server)
 # PQS MCP Server
 
 The world's first named AI prompt quality score — as an MCP server.
