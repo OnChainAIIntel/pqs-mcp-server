@@ -1,6 +1,6 @@
 {
   "name": "pqs-mcp-server",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "PQS (Prompt Quality Score) MCP server. Score, optimize, and compare LLM prompts before they hit any model. x402-native, built on PEEM, RAGAS, MT-Bench, G-Eval, and ROUGE.",
   "main": "index.js",
   "files": [
@@ -39,7 +39,7 @@
   "homepage": "https://promptqualityscore.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/OnChainAIIntel/pqs-mcp-server"
+    "url": "git+https://github.com/OnChainAIIntel/pqs-mcp-server.git"
   },
   "mcpName": "io.github.onchainaiintel/pqs-mcp-server"
 }
