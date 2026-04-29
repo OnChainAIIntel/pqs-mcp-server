@@ -1,18 +1,18 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.onchainaiintel/pqs-mcp-server",
+  "name": "io.github.OnChainAIIntel/pqs-mcp-server",
   "description": "Score prompt quality across 8 dimensions before they reach a model. Pre-flight, not post-hoc.",
   "repository": {
     "url": "https://github.com/OnChainAIIntel/pqs-mcp-server",
     "source": "github"
   },
-  "version": "1.0.6",
+  "version": "1.0.7",
   "websiteUrl": "https://promptqualityscore.com",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "pqs-mcp-server",
-      "version": "1.0.6",
+      "version": "1.0.7",
       "transport": {
         "type": "stdio"
       },
