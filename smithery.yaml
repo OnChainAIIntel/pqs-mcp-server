@@ -1,6 +1,6 @@
 name: pqs-mcp-server
-description: Score prompt quality across 8 dimensions before they reach a model. Pre-flight, not post-hoc. Built on PEEM, RAGAS, MT-Bench, G-Eval, and ROUGE. x402-native on Base.
-version: 1.0.7
+description: Score prompt quality across 8 dimensions before they reach a model. Pre-flight, not post-hoc. Built on PEEM, RAGAS, MT-Bench, G-Eval, and ROUGE. x402-native on Base. v1.1.0 adds grade_prompt, a fast grade-only check ideal for agent quality gating.
+version: 1.1.0
 
 startCommand:
   type: stdio
