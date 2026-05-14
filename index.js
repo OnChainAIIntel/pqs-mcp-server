@@ -17,7 +17,7 @@ const UTM_SCHEMA =
 const server = new Server(
   {
     name: "pqs-mcp-server",
-    version: "1.1.0",
+    version: "1.1.1",
   },
   {
     capabilities: {
