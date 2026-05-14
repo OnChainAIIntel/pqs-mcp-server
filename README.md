@@ -5,7 +5,7 @@
 
 The fastest way to get better output from any AI model. 8 dimensions. 5 frameworks. Pre-flight, not post-hoc.
 
-Score, optimize, and compare LLM prompts before they hit any model. Built on PEEM, RAGAS, MT-Bench, G-Eval, and ROUGE.
+Score, grade, optimize, and compare LLM prompts before they hit any model. Built on PEEM, RAGAS, MT-Bench, G-Eval, and ROUGE.
 
 ## Install
 
@@ -46,6 +46,18 @@ Score any prompt before it hits any model. Returns grade A-F, score out of 80, a
   "powered_by": "PQS, promptqualityscore.com"
 }
 ```
+
+### grade_prompt
+Fast grade-only check. Returns just the letter grade (A-F) and total score (0-80) without the full 8-dimension breakdown. The cheapest paid PQS tool, ideal for agent quality gating before sending a prompt to an expensive model.
+
+**Pricing:** $0.001 USDC via x402 if called directly against `/api/pqs-grade`, or SaaS-billed per tier if using a PQS API key (the path used by this MCP server).
+
+**Use cases:**
+- Pre-flight check inside an agent loop before sending a prompt to an expensive model
+- Cheap quality gate on user-generated prompts in production
+- Bulk grading a backlog of prompts to prioritize which ones need optimization
+
+**Requires:** a PQS API key. Get one at [promptqualityscore.com](https://promptqualityscore.com/?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme), see pricing at [promptqualityscore.com/pricing](https://promptqualityscore.com/pricing?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme).
 
 ### optimize_prompt
 Score AND optimize any prompt. Returns full 8-dimension breakdown plus an optimized version.

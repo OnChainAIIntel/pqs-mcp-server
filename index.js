@@ -17,7 +17,7 @@ const UTM_SCHEMA =
 const server = new Server(
   {
     name: "pqs-mcp-server",
-    version: "1.0.8",
+    version: "1.1.0",
   },
   {
     capabilities: {
@@ -47,6 +47,30 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
           },
           required: ["prompt"],
+        },
+      },
+      {
+        name: "grade_prompt",
+        description:
+          `Get a fast grade (A-F) and total score (0-80) for any LLM prompt without the full 8-dimension breakdown. Cheapest paid PQS tool, ideal for agent quality gating before sending to a model. Requires a PQS API key from https://promptqualityscore.com/${UTM_TOOL}`,
+        inputSchema: {
+          type: "object",
+          properties: {
+            prompt: {
+              type: "string",
+              description: "The prompt to grade",
+            },
+            vertical: {
+              type: "string",
+              enum: ["software", "content", "business", "education", "science", "crypto", "general"],
+              description: "The domain context for grading. Defaults to general.",
+            },
+            api_key: {
+              type: "string",
+              description: `PQS API key for authentication. Get one at https://promptqualityscore.com/${UTM_SCHEMA}`,
+            },
+          },
+          required: ["prompt", "api_key"],
         },
       },
       {
@@ -108,6 +132,29 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     const response = await fetch(`${PQS_BASE}/api/score/free`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt: args.prompt,
+        vertical: args.vertical || "general",
+      }),
+    });
+    const data = await response.json();
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(data, null, 2),
+        },
+      ],
+    };
+  }
+
+  if (name === "grade_prompt") {
+    const response = await fetch(`${PQS_BASE}/api/pqs-grade`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-API-Key": args.api_key,
+      },
       body: JSON.stringify({
         prompt: args.prompt,
         vertical: args.vertical || "general",
