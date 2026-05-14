@@ -6,13 +6,13 @@
     "url": "https://github.com/OnChainAIIntel/pqs-mcp-server",
     "source": "github"
   },
-  "version": "1.0.7",
+  "version": "1.0.8",
   "websiteUrl": "https://promptqualityscore.com",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "pqs-mcp-server",
-      "version": "1.0.7",
+      "version": "1.0.8",
       "transport": {
         "type": "stdio"
       },

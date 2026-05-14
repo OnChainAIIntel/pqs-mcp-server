@@ -3,9 +3,9 @@
 [![pqs-mcp-server MCP server](https://glama.ai/mcp/servers/OnChainAIIntel/pqs-mcp-server/badges/card.svg)](https://glama.ai/mcp/servers/OnChainAIIntel/pqs-mcp-server)
 # PQS MCP Server
 
-The world's first named AI prompt quality score — as an MCP server.
+The fastest way to get better output from any AI model. 8 dimensions. 5 frameworks. Pre-flight, not post-hoc.
 
-Score, optimize, and compare LLM prompts before they hit any model. Built on PEEM, RAGAS, G-Eval, and MT-Bench frameworks.
+Score, optimize, and compare LLM prompts before they hit any model. Built on PEEM, RAGAS, MT-Bench, G-Eval, and ROUGE.
 
 ## Install
 
@@ -30,8 +30,8 @@ smithery mcp add onchaintel/pqs
 
 ## Tools
 
-### score_prompt (Free — no API key needed)
-Score any prompt before it hits any model. Returns grade A-F, score out of 40, and percentile.
+### score_prompt (Free, no API key required)
+Score any prompt before it hits any model. Returns grade A-F, score out of 80, and percentile.
 
 **Example output:**
 ```json
@@ -39,52 +39,65 @@ Score any prompt before it hits any model. Returns grade A-F, score out of 40, a
   "pqs_version": "1.0",
   "prompt": "analyze this wallet",
   "vertical": "crypto",
-  "score": 8,
-  "out_of": 40,
+  "score": 16,
+  "out_of": 80,
   "grade": "D",
-  "upgrade": "Get full dimension breakdown at /api/score for $0.025 USDC via x402",
-  "powered_by": "PQS — pqs.onchainintel.net"
+  "upgrade": "Get full dimension breakdown and an optimized prompt at /api/score/full",
+  "powered_by": "PQS, promptqualityscore.com"
 }
 ```
 
-### optimize_prompt ($0.025 USDC via x402)
-Score AND optimize any prompt. Returns full 8-dimension breakdown + optimized version.
+### optimize_prompt
+Score AND optimize any prompt. Returns full 8-dimension breakdown plus an optimized version.
 
-**Requires:** PQS API key (get one free at pqs.onchainintel.net)
+**Requires:** a PQS API key. SaaS-billed per tier. Get one at [promptqualityscore.com](https://promptqualityscore.com?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme), see pricing at [promptqualityscore.com/pricing](https://promptqualityscore.com/pricing?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme).
 
-### compare_models ($1.25 USDC via x402)
+### compare_models
 Compare Claude vs GPT-4o on the same prompt. Judged by a third model. Returns winner, scores, and recommendation.
 
-**Requires:** PQS API key (get one free at pqs.onchainintel.net)
+**Requires:** a PQS API key. SaaS-billed per tier. Get one at [promptqualityscore.com](https://promptqualityscore.com?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme), see pricing at [promptqualityscore.com/pricing](https://promptqualityscore.com/pricing?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme).
 
 ## Verticals
 
 Specify the domain context for more accurate scoring:
 
-- `software` — Software engineering, code, debugging
-- `content` — Content creation, copywriting, social media
-- `business` — Business analysis, finance, strategy
-- `education` — Education, research, academic writing
-- `science` — Scientific research, data analysis
-- `crypto` — Crypto trading, DeFi, onchain analysis
-- `general` — General purpose (default)
+- `software`: software engineering, code, debugging
+- `content`: content creation, copywriting, social media
+- `business`: business analysis, finance, strategy
+- `education`: education, research, academic writing
+- `science`: scientific research, data analysis
+- `crypto`: crypto trading, DeFi, onchain analysis
+- `general`: general purpose (default)
 
 ## Quality Gate Pattern
 
 Use PQS as a pre-inference quality gate:
 ```javascript
-const score = await fetch("https://pqs.onchainintel.net/api/score/free", {
+const score = await fetch("https://promptqualityscore.com/api/score/free", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ prompt: userPrompt, vertical: "software" })
 });
 const { score: pqsScore } = await score.json();
-if (pqsScore < 28) throw new Error("Prompt quality too low — improve and retry");
+if (pqsScore < 56) throw new Error("Prompt quality too low. Improve and retry.");
 ```
 
-Grade D or below (< 28/40) means the prompt will waste inference spend.
+Grade D or below (under 56/80) means the prompt will waste inference spend.
+
+## x402 paid endpoints
+
+Per-call USDC payment on Base is also available via the canonical PQS HTTP API (no API key needed, caller settles on-chain). The MCP tools in this package use the SaaS API-key model. For x402 integration, see the canonical pricing and discovery artifacts at [promptqualityscore.com](https://promptqualityscore.com?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme).
+
+## Self-hosting
+
+Override the PQS backend URL with the `PQS_BASE` environment variable:
+```bash
+PQS_BASE=https://your-pqs-host.example.com npx pqs-mcp-server
+```
+
+Defaults to `https://promptqualityscore.com`.
 
 ## Built by
 
-John / OnChainIntel — @OnChainAIIntel  
-pqs.onchainintel.net
+OnChainIntel, [@OnChainAIIntel](https://twitter.com/OnChainAIIntel)
+[promptqualityscore.com](https://promptqualityscore.com?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme)

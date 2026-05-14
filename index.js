@@ -7,12 +7,17 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
-const PQS_BASE = "https://pqs.onchainintel.net";
+const PQS_BASE = process.env.PQS_BASE ?? "https://promptqualityscore.com";
+
+const UTM_TOOL =
+  "?utm_source=mcp&utm_medium=tool_description&utm_campaign=2026-05-mcp-tools";
+const UTM_SCHEMA =
+  "?utm_source=mcp&utm_medium=schema_description&utm_campaign=2026-05-mcp-tools";
 
 const server = new Server(
   {
     name: "pqs-mcp-server",
-    version: "1.0.0",
+    version: "1.0.8",
   },
   {
     capabilities: {
@@ -27,7 +32,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "score_prompt",
         description:
-          "Score any LLM prompt for quality using PQS (Prompt Quality Score). Returns a grade (A-F), score out of 40, and percentile. Free tier — no payment required. Use this before sending any prompt to an LLM to check if it is worth running.",
+          "Score any LLM prompt for quality using PQS (Prompt Quality Score). Returns a grade (A-F), score out of 80, and percentile. Free, no API key required. Use this before sending any prompt to an LLM to check if it is worth running.",
         inputSchema: {
           type: "object",
           properties: {
@@ -47,7 +52,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "optimize_prompt",
         description:
-          "Score AND optimize any LLM prompt using PQS. Returns the original score, an optimized version of the prompt, and dimension-by-dimension breakdown across 8 quality dimensions based on PEEM, RAGAS, G-Eval, and MT-Bench frameworks. Costs $0.025 USDC via x402. Use this when you want to improve a prompt before running it.",
+          `Score AND optimize any LLM prompt using PQS. Returns the original score, an optimized version of the prompt, and a dimension-by-dimension breakdown across 8 quality dimensions based on PEEM, RAGAS, MT-Bench, G-Eval, and ROUGE frameworks. Requires a PQS API key, SaaS-billed per tier. See pricing at https://promptqualityscore.com/pricing${UTM_TOOL}`,
         inputSchema: {
           type: "object",
           properties: {
@@ -62,7 +67,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             api_key: {
               type: "string",
-              description: "PQS API key for authentication. Get one at pqs.onchainintel.net",
+              description: `PQS API key for authentication. Get one at https://promptqualityscore.com${UTM_SCHEMA}`,
             },
           },
           required: ["prompt", "api_key"],
@@ -71,7 +76,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "compare_models",
         description:
-          "Compare how Claude vs GPT-4o handles the same prompt using PQS. Both models are scored head-to-head by a third model judge. Returns winner, scores, and recommendation on which model to use for this prompt type. Costs $0.50 USDC via x402.",
+          `Compare how Claude vs GPT-4o handles the same prompt using PQS. Both models are scored head-to-head by a third model judge. Returns winner, scores, and recommendation on which model to use for this prompt type. Requires a PQS API key, SaaS-billed per tier. See pricing at https://promptqualityscore.com/pricing${UTM_TOOL}`,
         inputSchema: {
           type: "object",
           properties: {
@@ -86,7 +91,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             },
             api_key: {
               type: "string",
-              description: "PQS API key for authentication. Get one at pqs.onchainintel.net",
+              description: `PQS API key for authentication. Get one at https://promptqualityscore.com${UTM_SCHEMA}`,
             },
           },
           required: ["prompt", "api_key"],

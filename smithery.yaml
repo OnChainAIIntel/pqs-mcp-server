@@ -1,6 +1,6 @@
 name: pqs-mcp-server
 description: Score prompt quality across 8 dimensions before they reach a model. Pre-flight, not post-hoc. Built on PEEM, RAGAS, MT-Bench, G-Eval, and ROUGE. x402-native on Base.
-version: 1.0.7
+version: 1.0.8
 
 startCommand:
   type: stdio
