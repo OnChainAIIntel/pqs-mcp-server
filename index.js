@@ -13,11 +13,17 @@ const UTM_TOOL =
   "?utm_source=mcp&utm_medium=tool_description&utm_campaign=2026-05-mcp-tools";
 const UTM_SCHEMA =
   "?utm_source=mcp&utm_medium=schema_description&utm_campaign=2026-05-mcp-tools";
+// Appended to the outbound API calls in the tool handlers below. The PQS edge
+// middleware (surface-log) records req.nextUrl.search into pqs_surface_traffic,
+// so this query string is what attributes MCP-driven API traffic. The handlers
+// read their input from the POST body and ignore the query string.
+const UTM_API =
+  "?utm_source=mcp&utm_medium=api_call&utm_campaign=2026-05-mcp-tools";
 
 const server = new Server(
   {
     name: "pqs-mcp-server",
-    version: "1.1.1",
+    version: "1.1.2",
   },
   {
     capabilities: {
@@ -129,7 +135,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
   if (name === "score_prompt") {
-    const response = await fetch(`${PQS_BASE}/api/score/free`, {
+    const response = await fetch(`${PQS_BASE}/api/score/free${UTM_API}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -149,7 +155,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   if (name === "grade_prompt") {
-    const response = await fetch(`${PQS_BASE}/api/pqs-grade`, {
+    const response = await fetch(`${PQS_BASE}/api/pqs-grade${UTM_API}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -172,7 +178,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   if (name === "optimize_prompt") {
-    const response = await fetch(`${PQS_BASE}/api/score/full`, {
+    const response = await fetch(`${PQS_BASE}/api/score/full${UTM_API}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -195,7 +201,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   if (name === "compare_models") {
-    const response = await fetch(`${PQS_BASE}/api/score/compare`, {
+    const response = await fetch(`${PQS_BASE}/api/score/compare${UTM_API}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
