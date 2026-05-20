@@ -23,7 +23,7 @@ const UTM_API =
 const server = new Server(
   {
     name: "pqs-mcp-server",
-    version: "1.1.2",
+    version: "1.1.3",
   },
   {
     capabilities: {
@@ -38,7 +38,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       {
         name: "score_prompt",
         description:
-          "Score any LLM prompt for quality using PQS (Prompt Quality Score). Returns a grade (A-F), score out of 80, and percentile. Free, no API key required. Use this before sending any prompt to an LLM to check if it is worth running.",
+          "Checks prompt quality before Claude answers. Returns an A-F grade in 2 seconds, catches vague instructions, missing context, and ambiguity that produce bad answers. Free, no API key. Ask 'score this prompt' or 'check this before answering' when you want better output.",
         inputSchema: {
           type: "object",
           properties: {
@@ -56,33 +56,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         },
       },
       {
-        name: "grade_prompt",
-        description:
-          `Get a fast grade (A-F) and total score (0-80) for any LLM prompt without the full 8-dimension breakdown. Cheapest paid PQS tool, ideal for agent quality gating before sending to a model. Requires a PQS API key from https://promptqualityscore.com/${UTM_TOOL}`,
-        inputSchema: {
-          type: "object",
-          properties: {
-            prompt: {
-              type: "string",
-              description: "The prompt to grade",
-            },
-            vertical: {
-              type: "string",
-              enum: ["software", "content", "business", "education", "science", "crypto", "general"],
-              description: "The domain context for grading. Defaults to general.",
-            },
-            api_key: {
-              type: "string",
-              description: `PQS API key for authentication. Get one at https://promptqualityscore.com/${UTM_SCHEMA}`,
-            },
-          },
-          required: ["prompt", "api_key"],
-        },
-      },
-      {
         name: "optimize_prompt",
         description:
-          `Score AND optimize any LLM prompt using PQS. Returns the original score, an optimized version of the prompt, and a dimension-by-dimension breakdown across 8 quality dimensions based on PEEM, RAGAS, MT-Bench, G-Eval, and ROUGE frameworks. Requires a PQS API key, SaaS-billed per tier. See pricing at https://promptqualityscore.com/pricing${UTM_TOOL}`,
+          `Rewrites your prompt to fix the issues score_prompt found. Returns the improved version, what changed, and why. Run score_prompt first (free) to see what is broken, then use this tool to fix it. Requires an API key from https://promptqualityscore.com/${UTM_TOOL}`,
         inputSchema: {
           type: "object",
           properties: {
@@ -103,30 +79,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
           required: ["prompt", "api_key"],
         },
       },
-      {
-        name: "compare_models",
-        description:
-          `Compare how Claude vs GPT-4o handles the same prompt using PQS. Both models are scored head-to-head by a third model judge. Returns winner, scores, and recommendation on which model to use for this prompt type. Requires a PQS API key, SaaS-billed per tier. See pricing at https://promptqualityscore.com/pricing${UTM_TOOL}`,
-        inputSchema: {
-          type: "object",
-          properties: {
-            prompt: {
-              type: "string",
-              description: "The prompt to compare across models",
-            },
-            vertical: {
-              type: "string",
-              enum: ["software", "content", "business", "education", "science", "crypto", "general"],
-              description: "The domain context. Defaults to general.",
-            },
-            api_key: {
-              type: "string",
-              description: `PQS API key for authentication. Get one at https://promptqualityscore.com${UTM_SCHEMA}`,
-            },
-          },
-          required: ["prompt", "api_key"],
-        },
-      },
     ],
   };
 });
@@ -137,7 +89,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   if (name === "score_prompt") {
     const response = await fetch(`${PQS_BASE}/api/score/free${UTM_API}`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "User-Agent": "pqs-mcp-server/1.1.3",
+      },
       body: JSON.stringify({
         prompt: args.prompt,
         vertical: args.vertical || "general",
@@ -160,6 +115,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       headers: {
         "Content-Type": "application/json",
         "X-API-Key": args.api_key,
+        "User-Agent": "pqs-mcp-server/1.1.3",
       },
       body: JSON.stringify({
         prompt: args.prompt,
@@ -183,6 +139,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       headers: {
         "Content-Type": "application/json",
         "X-API-Key": args.api_key,
+        "User-Agent": "pqs-mcp-server/1.1.3",
       },
       body: JSON.stringify({
         prompt: args.prompt,
@@ -206,6 +163,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       headers: {
         "Content-Type": "application/json",
         "X-API-Key": args.api_key,
+        "User-Agent": "pqs-mcp-server/1.1.3",
       },
       body: JSON.stringify({
         prompt: args.prompt,
