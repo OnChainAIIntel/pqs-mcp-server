@@ -23,7 +23,7 @@ const UTM_API =
 const server = new Server(
   {
     name: "pqs-mcp-server",
-    version: "1.1.3",
+    version: "1.2.0",
   },
   {
     capabilities: {
@@ -91,7 +91,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "User-Agent": "pqs-mcp-server/1.1.3",
+        "User-Agent": "pqs-mcp-server/1.2.0",
       },
       body: JSON.stringify({
         prompt: args.prompt,
@@ -115,7 +115,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       headers: {
         "Content-Type": "application/json",
         "X-API-Key": args.api_key,
-        "User-Agent": "pqs-mcp-server/1.1.3",
+        "User-Agent": "pqs-mcp-server/1.2.0",
       },
       body: JSON.stringify({
         prompt: args.prompt,
@@ -134,12 +134,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   if (name === "optimize_prompt") {
-    const response = await fetch(`${PQS_BASE}/api/score/full${UTM_API}`, {
+    const response = await fetch(`${PQS_BASE}/api/v1/optimize${UTM_API}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-API-Key": args.api_key,
-        "User-Agent": "pqs-mcp-server/1.1.3",
+        "User-Agent": "pqs-mcp-server/1.2.0",
       },
       body: JSON.stringify({
         prompt: args.prompt,
@@ -163,7 +163,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       headers: {
         "Content-Type": "application/json",
         "X-API-Key": args.api_key,
-        "User-Agent": "pqs-mcp-server/1.1.3",
+        "User-Agent": "pqs-mcp-server/1.2.0",
       },
       body: JSON.stringify({
         prompt: args.prompt,
