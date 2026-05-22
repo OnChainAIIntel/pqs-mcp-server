@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 
+import { createRequire } from "node:module";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
+
+const require = createRequire(import.meta.url);
+const { version: VERSION } = require("./package.json");
 
 const PQS_BASE = process.env.PQS_BASE ?? "https://promptqualityscore.com";
 
@@ -23,7 +27,7 @@ const UTM_API =
 const server = new Server(
   {
     name: "pqs-mcp-server",
-    version: "1.2.0",
+    version: VERSION,
   },
   {
     capabilities: {
@@ -91,31 +95,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "User-Agent": "pqs-mcp-server/1.2.0",
-      },
-      body: JSON.stringify({
-        prompt: args.prompt,
-        vertical: args.vertical || "general",
-      }),
-    });
-    const data = await response.json();
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(data, null, 2),
-        },
-      ],
-    };
-  }
-
-  if (name === "grade_prompt") {
-    const response = await fetch(`${PQS_BASE}/api/pqs-grade${UTM_API}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-API-Key": args.api_key,
-        "User-Agent": "pqs-mcp-server/1.2.0",
+        "User-Agent": `pqs-mcp-server/${VERSION}`,
       },
       body: JSON.stringify({
         prompt: args.prompt,
@@ -139,31 +119,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       headers: {
         "Content-Type": "application/json",
         "X-API-Key": args.api_key,
-        "User-Agent": "pqs-mcp-server/1.2.0",
-      },
-      body: JSON.stringify({
-        prompt: args.prompt,
-        vertical: args.vertical || "general",
-      }),
-    });
-    const data = await response.json();
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(data, null, 2),
-        },
-      ],
-    };
-  }
-
-  if (name === "compare_models") {
-    const response = await fetch(`${PQS_BASE}/api/score/compare${UTM_API}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-API-Key": args.api_key,
-        "User-Agent": "pqs-mcp-server/1.2.0",
+        "User-Agent": `pqs-mcp-server/${VERSION}`,
       },
       body: JSON.stringify({
         prompt: args.prompt,

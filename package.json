@@ -1,7 +1,7 @@
 {
   "name": "pqs-mcp-server",
-  "version": "1.2.0",
-  "description": "PQS (Prompt Quality Score) MCP server. Score, grade, optimize, and compare LLM prompts before they hit any model. x402-native, built on PEEM, RAGAS, MT-Bench, G-Eval, and ROUGE.",
+  "version": "1.3.0",
+  "description": "Score prompt quality across 8 dimensions before they reach a model. Pre-flight, not post-hoc. Built on PEEM, RAGAS, MT-Bench, G-Eval, and ROUGE. x402-native on Base.",
   "main": "index.js",
   "files": [
     "index.js",
