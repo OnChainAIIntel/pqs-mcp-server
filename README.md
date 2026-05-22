@@ -47,25 +47,8 @@ Score any prompt before it hits any model. Returns grade A-F, score out of 80, a
 }
 ```
 
-### grade_prompt
-Fast grade-only check. Returns just the letter grade (A-F) and total score (0-80) without the full 8-dimension breakdown. The cheapest paid PQS tool, ideal for agent quality gating before sending a prompt to an expensive model.
-
-**Pricing:** $0.001 USDC via x402 if called directly against `/api/pqs-grade`, or SaaS-billed per tier if using a PQS API key (the path used by this MCP server).
-
-**Use cases:**
-- Pre-flight check inside an agent loop before sending a prompt to an expensive model
-- Cheap quality gate on user-generated prompts in production
-- Bulk grading a backlog of prompts to prioritize which ones need optimization
-
-**Requires:** a PQS API key. Get one at [promptqualityscore.com](https://promptqualityscore.com/?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme), see pricing at [promptqualityscore.com/pricing](https://promptqualityscore.com/pricing?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme).
-
 ### optimize_prompt
 Score AND optimize any prompt. Returns full 8-dimension breakdown plus an optimized version.
-
-**Requires:** a PQS API key. SaaS-billed per tier. Get one at [promptqualityscore.com](https://promptqualityscore.com?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme), see pricing at [promptqualityscore.com/pricing](https://promptqualityscore.com/pricing?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme).
-
-### compare_models
-Compare Claude vs GPT-4o on the same prompt. Judged by a third model. Returns winner, scores, and recommendation.
 
 **Requires:** a PQS API key. SaaS-billed per tier. Get one at [promptqualityscore.com](https://promptqualityscore.com?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme), see pricing at [promptqualityscore.com/pricing](https://promptqualityscore.com/pricing?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme).
 
