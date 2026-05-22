@@ -50,11 +50,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
               type: "string",
               description: "The prompt to score",
             },
-            vertical: {
-              type: "string",
-              enum: ["software", "content", "business", "education", "science", "crypto", "general"],
-              description: "The domain context for scoring. Defaults to general.",
-            },
           },
           required: ["prompt"],
         },
@@ -69,11 +64,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
             prompt: {
               type: "string",
               description: "The prompt to optimize",
-            },
-            vertical: {
-              type: "string",
-              enum: ["software", "content", "business", "education", "science", "crypto", "general"],
-              description: "The domain context for optimization. Defaults to general.",
             },
             api_key: {
               type: "string",
@@ -99,7 +89,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       },
       body: JSON.stringify({
         prompt: args.prompt,
-        vertical: args.vertical || "general",
       }),
     });
     const data = await response.json();
@@ -123,7 +112,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       },
       body: JSON.stringify({
         prompt: args.prompt,
-        vertical: args.vertical || "general",
       }),
     });
     const data = await response.json();

@@ -38,7 +38,6 @@ Score any prompt before it hits any model. Returns grade A-F, score out of 80, a
 {
   "pqs_version": "1.0",
   "prompt": "analyze this wallet",
-  "vertical": "crypto",
   "score": 16,
   "out_of": 80,
   "grade": "D",
@@ -52,18 +51,6 @@ Score AND optimize any prompt. Returns full 8-dimension breakdown plus an optimi
 
 **Requires:** a PQS API key. SaaS-billed per tier. Get one at [promptqualityscore.com](https://promptqualityscore.com?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme), see pricing at [promptqualityscore.com/pricing](https://promptqualityscore.com/pricing?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme).
 
-## Verticals
-
-Specify the domain context for more accurate scoring:
-
-- `software`: software engineering, code, debugging
-- `content`: content creation, copywriting, social media
-- `business`: business analysis, finance, strategy
-- `education`: education, research, academic writing
-- `science`: scientific research, data analysis
-- `crypto`: crypto trading, DeFi, onchain analysis
-- `general`: general purpose (default)
-
 ## Quality Gate Pattern
 
 Use PQS as a pre-inference quality gate:
@@ -71,7 +58,7 @@ Use PQS as a pre-inference quality gate:
 const score = await fetch("https://promptqualityscore.com/api/score/free", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ prompt: userPrompt, vertical: "software" })
+  body: JSON.stringify({ prompt: userPrompt })
 });
 const { score: pqsScore } = await score.json();
 if (pqsScore < 56) throw new Error("Prompt quality too low. Improve and retry.");
