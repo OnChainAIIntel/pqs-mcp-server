@@ -44,9 +44,12 @@ smithery mcp add onchaintel/pqs
 ## Tools
 
 ### score_prompt (Free, no API key required)
-Returns grade (A-F), score out of 80, and full 8-dimension breakdown across clarity, specificity, context, constraints, output_format, role_definition, examples, and cot_structure.
 
-**Example output:**
+Returns a 0-80 score, A-F grade, full 8-dimension breakdown (clarity, specificity, context, constraints, output_format, role_definition, examples, cot_structure), and the weakest dimension. Rate-limited per IP: 5/min, 10/day, 100/month.
+
+Low- and mid-band scores also include a structured `suggestion` field with a message, a `next_tool` pointer to `optimize_prompt`, and a subscribe URL the consuming LLM can paraphrase back to the user.
+
+**Example output (low-band score, suggestion attached):**
 ```json
 {
   "pqs_version": "2.0",
@@ -65,13 +68,30 @@ Returns grade (A-F), score out of 80, and full 8-dimension breakdown across clar
     "cot_structure": 1
   },
   "weakest_dimension": "specificity",
-  "upgrade": "Get top_fixes and a rewritten prompt at /api/v1/optimize for $0.025 USDC via x402 — promptqualityscore.com",
-  "powered_by": "PQS — promptqualityscore.com"
+  "powered_by": "PQS — promptqualityscore.com",
+  "suggestion": {
+    "message": "This prompt scored 9/80 (F) — significant room to improve. The optimize_prompt tool rewrites it and shows side-by-side outputs from a frontier model, so you can see the impact. optimize_prompt is part of PQS Pro ($19.99/mo, 1,000 calls/mo). Subscribe at https://promptqualityscore.com/pricing?utm_source=mcp&utm_medium=suggestion_v140&utm_campaign=2026-05-mcp-tools-v140.",
+    "next_tool": "optimize_prompt",
+    "subscribe_url": "https://promptqualityscore.com/pricing?utm_source=mcp&utm_medium=suggestion_v140&utm_campaign=2026-05-mcp-tools-v140"
+  }
 }
 ```
 
-### optimize_prompt
-Returns a rewritten, higher-scoring version of your prompt with before/after dimension deltas. $0.025 USDC via x402. Requires API key from [promptqualityscore.com](https://promptqualityscore.com?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme).
+If the per-IP rate limit is hit, the response is a structured `rate_limit_exceeded` payload with subscribe and account URLs.
+
+### optimize_prompt (Pro subscription required)
+
+Rewrites a prompt to score higher and runs both versions through a frontier model so the user can see the before/after output. Returns the optimized prompt, before/after dimension scores (with totals), `improvement_pct`, and side-by-side sample outputs.
+
+**Pro subscription required ($19.99/mo, 1,000 calls/mo, includes batch + A/B comparison).** Subscribe at [promptqualityscore.com/pricing](https://promptqualityscore.com/pricing?utm_source=mcp&utm_medium=readme_v140&utm_campaign=2026-05-mcp-readme-v140).
+
+If the API key is missing, invalid, or on the Free tier, the tool returns a structured error pointing the user at the right URL. No silent failures, no inventing keys. Errors emitted:
+
+- `api_key_required`: no `api_key` argument was sent
+- `api_key_invalid`: key not recognized
+- `subscription_required`: key is valid but Free tier (subscribe to upgrade)
+- `rate_limited`: per-minute burst limit reached (Pro is rate-limited per minute, not per month) or temporary upstream capacity issue
+- `service_unavailable`: upstream 5xx
 
 ## Quality Gate Pattern
 
@@ -88,9 +108,9 @@ if (pqsScore < 56) throw new Error("Prompt quality too low. Improve and retry.")
 
 Grade D or below (under 56/80) means the prompt will waste inference spend.
 
-## x402 paid endpoints
+## x402 (legacy pay-per-call)
 
-Per-call USDC payment on Base is also available via the canonical PQS HTTP API (no API key needed, caller settles on-chain). The MCP tools in this package use the SaaS API-key model. For x402 integration, see the canonical pricing and discovery artifacts at [promptqualityscore.com](https://promptqualityscore.com?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme).
+The MCP tools in this package use the SaaS API-key model. A separate x402-native pay-per-call path is available via the canonical PQS HTTP API (no API key, caller settles USDC on Base on-chain). For x402 integration, see the canonical pricing and discovery artifacts at [promptqualityscore.com](https://promptqualityscore.com?utm_source=mcp&utm_medium=readme_v140&utm_campaign=2026-05-mcp-readme-v140).
 
 ## Self-hosting
 
@@ -104,4 +124,4 @@ Defaults to `https://promptqualityscore.com`.
 ## Built by
 
 OnChainIntel, [@OnChainAIIntel](https://twitter.com/OnChainAIIntel)
-[promptqualityscore.com](https://promptqualityscore.com?utm_source=mcp&utm_medium=readme&utm_campaign=2026-05-mcp-readme)
+[promptqualityscore.com](https://promptqualityscore.com?utm_source=mcp&utm_medium=readme_v140&utm_campaign=2026-05-mcp-readme-v140)

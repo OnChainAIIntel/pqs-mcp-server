@@ -6,21 +6,21 @@
     "url": "https://github.com/OnChainAIIntel/pqs-mcp-server",
     "source": "github"
   },
-  "version": "1.3.2",
+  "version": "1.4.0",
   "websiteUrl": "https://promptqualityscore.com",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "pqs-mcp-server",
-      "version": "1.3.2",
+      "version": "1.4.0",
       "transport": {
         "type": "stdio"
       },
       "environmentVariables": [
         {
           "name": "PQS_API_KEY",
-          "description": "Your PQS API key (PQS_xxx). Get one free at promptqualityscore.com.",
-          "isRequired": true,
+          "description": "Your PQS Pro API key (pqs_live_xxx) for optimize_prompt. score_prompt is free and requires no key. Subscribe at promptqualityscore.com/pricing.",
+          "isRequired": false,
           "isSecret": true,
           "format": "string"
         }
