@@ -1,0 +1,87 @@
+name: Publish to MCP Registry
+
+# Publishes server.json to the Official MCP Registry on v* tag pushes.
+# Triggered manually via workflow_dispatch for retries or out-of-band re-publishes.
+#
+# Auth: GitHub Actions OIDC. No secrets configured. The id-token: write
+# permission below is the only requirement — the Registry verifies the OIDC
+# token's repository claim against the server's io.github.OnChainAIIntel/*
+# namespace.
+#
+# Idempotency: if workflow_dispatch is triggered when server.json's version
+# is already isLatest in the Registry, mcp-publisher publish behavior is
+# currently unguarded — first occurrence will reveal whether the Registry
+# rejects, no-ops, or re-accepts. Add a guard step if/when that surfaces.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: publish-mcp-registry
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish to MCP Registry
+    runs-on: ubuntu-latest
+    env:
+      MCP_PUBLISHER_VERSION: "1.7.3"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install mcp-publisher (pinned)
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            "https://github.com/modelcontextprotocol/registry/releases/download/v${MCP_PUBLISHER_VERSION}/mcp-publisher_linux_amd64.tar.gz" \
+            | tar xz mcp-publisher
+          chmod +x mcp-publisher
+          ls -la mcp-publisher
+          ACTUAL_VERSION=$(./mcp-publisher --version 2>&1)
+          echo "$ACTUAL_VERSION"
+          echo "$ACTUAL_VERSION" | grep -q "${MCP_PUBLISHER_VERSION}" || {
+            echo "::error::Expected mcp-publisher ${MCP_PUBLISHER_VERSION}, got: $ACTUAL_VERSION"
+            exit 1
+          }
+
+      - name: Validate server.json
+        run: ./mcp-publisher validate
+
+      - name: Login via GitHub OIDC
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish
+        run: ./mcp-publisher publish
+
+      - name: Verify Registry reflects new version as isLatest
+        run: |
+          set -euo pipefail
+          VERSION=$(jq -r '.version' server.json)
+          NAME=$(jq -r '.name' server.json)
+          echo "Verifying $NAME@$VERSION is isLatest in Registry..."
+          curl -fsSL -G "https://registry.modelcontextprotocol.io/v0/servers" \
+            --data-urlencode "search=$NAME" \
+            -o /tmp/registry.json
+          MATCH=$(jq -r --arg name "$NAME" --arg version "$VERSION" '
+            .servers[]
+            | select(.server.name == $name and .server.version == $version)
+            | "isLatest=\(._meta["io.modelcontextprotocol.registry/official"].isLatest) status=\(._meta["io.modelcontextprotocol.registry/official"].status)"
+          ' /tmp/registry.json)
+          if [ -z "$MATCH" ]; then
+            echo "::error::Could not find $NAME@$VERSION in Registry response."
+            echo "All entries matching name:"
+            jq --arg name "$NAME" '.servers[] | select(.server.name == $name) | {version: .server.version, isLatest: ._meta["io.modelcontextprotocol.registry/official"].isLatest}' /tmp/registry.json
+            exit 1
+          fi
+          echo "Found: $MATCH"
+          if [[ "$MATCH" != *"isLatest=true"* ]]; then
+            echo "::error::Published version is not isLatest in Registry."
+            exit 1
+          fi
+          echo "✓ Verified: $NAME@$VERSION is isLatest=true in Registry."
