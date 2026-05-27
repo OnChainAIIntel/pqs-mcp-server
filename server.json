@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.OnChainAIIntel/pqs-mcp-server",
-  "description": "Score prompt quality across 8 dimensions before they reach a model. Pre-flight, not post-hoc.",
+  "description": "PQS is the fastest way to get better output from any AI model. 8 dimensions. 5 frameworks. Pre-flight, not post-hoc.",
   "repository": {
     "url": "https://github.com/OnChainAIIntel/pqs-mcp-server",
     "source": "github"
